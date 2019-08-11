@@ -3,7 +3,7 @@ Description=Check current time and load to automatically shutdown
 After=systemd-user-sessions.service
 
 [Service]
-ExecStart=/home/jeremy/AutoShutdownLoads/run.js __LOAD__ __AFTER_TIME__ __BEFORE_TIME__ __FREQUENCY__
+ExecStart=__PATH__/run.sh __LOAD__ __AFTER_TIME__ __BEFORE_TIME__ __FREQUENCY__
 
 [Install]
 WantedBy=multi-user.target
