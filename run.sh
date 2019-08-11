@@ -30,21 +30,28 @@ echo "Shutdown programed between: '$shutdown_after_hour:$shutdown_after_mins' an
 echo "Check frequency: $sleep_time seconds"
 
 while true; do
-  current_hour=`date +"%H"`
-  current_mins=`date +"%M"`
+  # File named 'enabled' must exist in order to enter iteration
+  if [ -f 'enabled' ]; then
+    current_hour=`date +"%H"`
+    current_mins=`date +"%M"`
 
-  echo "current time: $current_hour:$current_mins"
+    echo "current time: $current_hour:$current_mins"
 
-  if [ "$current_hour" -ge "$shutdown_after_hour" ] &&
-     [ "$current_mins" -ge "$shutdown_after_mins" ] &&
-     [ "$current_hour" -lt "$shutdown_before_hour" ]; then
-    load=`cut -d ' ' -f3 <<< cat /proc/loadavg`
-    echo "current load: $load"
+    # Check if current time is between given time boundaries
+    if [ "$current_hour" -ge "$shutdown_after_hour" ] &&
+       [ "$current_mins" -ge "$shutdown_after_mins" ] &&
+       [ "$current_hour" -lt "$shutdown_before_hour" ]; then
+      load=`cut -d ' ' -f3 <<< cat /proc/loadavg`
+      echo "current load: $load"
 
-    is_under_load=`echo $load'<'$shutdown_under_load | bc -l`
-    if [ "$is_under_load" -eq 1 ]; then
-      shutdown now
+      # Check if machine load from last 15min is under given one
+      is_under_load=`echo $load'<'$shutdown_under_load | bc -l`
+      if [ "$is_under_load" -eq 1 ]; then
+        shutdown now
+      fi
     fi
+  else
+    echo "Disabled"
   fi
 
   sleep $sleep_time
