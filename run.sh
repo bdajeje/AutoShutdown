@@ -15,7 +15,7 @@ function showHelp()
   "
 }
 
-if [ "$#" -ne 5 ]; then
+if [ "$#" -ne 4 ]; then
   showHelp
   exit 1
 fi
@@ -45,7 +45,7 @@ while true; do
     if [ "$is_under_load" -eq 1 ]; then
       shutdown now
     fi
-  else
-    sleep $sleep_time
   fi
+
+  sleep $sleep_time
 done
