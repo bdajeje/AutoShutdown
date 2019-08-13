@@ -29,6 +29,10 @@ sleep_time=$4
 echo "Shutdown programed between: '$shutdown_after_hour:$shutdown_after_mins' and '$shutdown_before_hour:$shutdown_before_mins' under a load of '$shutdown_under_load'"
 echo "Check frequency: $sleep_time seconds"
 
+first_sleep=900
+echo "Sleeping for $first_sleep secs before checking (to prevent shutdown loop of hell)"
+sleep $first_sleep
+
 while true; do
   # File named 'enabled' must exist in order to enter iteration
   if [ -f 'enabled' ]; then
