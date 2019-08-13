@@ -22,12 +22,11 @@ fi
 
 shutdown_under_load=$1
 shutdown_after_hour=`echo $2 | sed -e 's/:/\n/g' | sed -n 1p`
-shutdown_after_mins=`echo $2 | sed -e 's/:/\n/g' | sed -n 2p`
 shutdown_before_hour=`echo $3 | sed -e 's/:/\n/g' | sed -n 1p`
 sleep_time=$4
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-echo "Shutdown programed between: '$shutdown_after_hour:$shutdown_after_mins' and '$shutdown_before_hour:$shutdown_before_mins' under a load of '$shutdown_under_load'"
+echo "Shutdown programed between: $shutdown_after_hour hour and $shutdown_before_hour hour under a load of '$shutdown_under_load'"
 echo "Check frequency: $sleep_time seconds"
 
 first_sleep=900
@@ -44,7 +43,6 @@ while true; do
 
     # Check if current time is between given time boundaries
     if [ "$current_hour" -ge "$shutdown_after_hour" ] &&
-       [ "$current_mins" -ge "$shutdown_after_mins" ] &&
        [ "$current_hour" -lt "$shutdown_before_hour" ]; then
       load=`cut -d ' ' -f3 <<< cat /proc/loadavg`
       echo "current load: $load"
