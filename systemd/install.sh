@@ -11,14 +11,18 @@ fi
 
 service_name=autoshutdown_load.service
 service_filepath=/lib/systemd/system/$service_name
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+script_path=$script_dir/..
 
 service_content=`cat autoshutdown_load.service`
-service_content=`echo ${service_content/__LOAD__/$1}`
-service_content=`echo ${service_content/__AFTER_TIME__/$2}`
-service_content=`echo ${service_content/__BEFORE_TIME__/$3}`
-service_content=`echo ${service_content/__FREQUENCY__/$4}`
+service_content=`echo "${service_content/__PATH__/$script_path}"`
+service_content=`echo "${service_content/__LOAD__/$1}"`
+service_content=`echo "${service_content/__AFTER_TIME__/$2}"`
+service_content=`echo "${service_content/__BEFORE_TIME__/$3}"`
+service_content=`echo "${service_content/__FREQUENCY__/$4}"`
 
-echo $service_content >> $service_filepath
+echo "$service_content" > $service_filepath
 chmod u+x $service_filepath
 sudo systemctl start $service_name
 sudo systemctl enable $service_name
+sudo systemctl daemon-reload
